@@ -63,7 +63,7 @@ end
 
 function appendit!(v, cycled)
     n = length(cycled)
-    for i in 1:10^4
+    for i in 1:1000
         append!(v, cycled[(i % n) + 1])
     end
 end
