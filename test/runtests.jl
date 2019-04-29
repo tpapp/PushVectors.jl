@@ -45,24 +45,56 @@ using PushVectors, Test, BenchmarkTools
     @test @inferred(finish!(v)) == w
 end
 
-function pushit(v)
+@testset "append!" begin
+    v = Vector{Float64}()
+    pv = PushVector{Float64}()
+    for _ in 1:1000
+        z = randn(rand(1:10))
+        @test append!(v, z) == @inferred append!(pv, z)
+        @test v == pv
+    end
+end
+
+function pushit!(v)
     for i in 1:10^4
         push!(v, i)
+    end
+end
+
+function appendit!(v, cycled)
+    n = length(cycled)
+    for i in 1:10^4
+        append!(v, cycled[(i % n) + 1])
     end
 end
 
 @testset "relative benchmarking" begin
     T_PushVector = @belapsed begin
         p = PushVector{Int64}()
-        pushit(p)
+        pushit!(p)
         finish!(p)
     end
 
     T_Vector = @belapsed begin
         p = Vector{Int64}()
-        pushit(p)
+        pushit!(p)
+    end
+
+    cycled = [randn(i) for i in 1:17]
+
+    A_PushVector = @belapsed begin
+        p = PushVector{Float64}()
+        appendit!(p, $cycled)
+        finish!(p)
+    end
+
+    A_Vector = @belapsed begin
+        p = Vector{Float64}()
+        appendit!(p, $cycled)
     end
 
     @info "benchmarks" T_PushVector T_Vector
     @test T_PushVector ≤ T_Vector
+    @info "benchmarks" A_PushVector A_Vector
+    @test A_PushVector ≤ A_Vector * 1.2 # here just ensure that it is not much worse
 end
