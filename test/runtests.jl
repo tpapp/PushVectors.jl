@@ -80,7 +80,7 @@ end
         pushit!(p)
     end
 
-    cycled = [randn(i) for i in 1:17]
+    cycled = [randn(i) for i in 1:5:(5*17)]
 
     A_PushVector = @belapsed begin
         p = PushVector{Float64}()
@@ -97,5 +97,5 @@ end
     @test T_PushVector ≤ T_Vector
     @info "benchmarks" A_PushVector A_Vector
     # here just ensure that it is not much worse, testing is noisy
-    @test A_PushVector ≤ A_Vector * 1.5
+    @test A_PushVector ≤ A_Vector * 1.1
 end

@@ -55,12 +55,18 @@ Base.empty!(v::PushVector) = (v.len = 0; v)
 function Base.append!(v::PushVector, xs)
     ι_xs = eachindex(xs)        # allow generalized indexing
     l = length(ι_xs)
-    L = l + v.len
-    if length(v.parent) < L
-        resize!(v.parent, nextpow(2, nextpow(2, L)))
+    if l ≤ 4
+        for x in xs
+            push!(v, x)
+        end
+    else
+        L = l + v.len
+        if length(v.parent) < L
+            resize!(v.parent, nextpow(2, nextpow(2, L)))
+        end
+        @inbounds copyto!(v.parent, v.len + 1, xs, first(ι_xs), l)
+        v.len += l
     end
-    @inbounds copyto!(v.parent, v.len + 1, xs, first(ι_xs), l)
-    v.len += l
     v
 end
 
