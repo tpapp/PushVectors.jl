@@ -1,18 +1,25 @@
 using PushVectors, Test, BenchmarkTools
 
 @testset "implementation sanity checks" begin
+
+    # create
     v = PushVector{Int}()
     @test v.len == 0
     @test v.parent isa Vector{Int}
     @test v == Int[]
+
+    # add one element
     push!(v, 1)
     @test @inferred(v[1]) == 1
     @test v.len == 1 == length(v)
     @test size(v) == (1, )
     @test v == Int[1]
 
+    # empty
+    @test empty!(v) == Int[] == v
+
     # make it double
-    for i in 2:5
+    for i in 1:5
         push!(v, i)
     end
     @test v == 1:5

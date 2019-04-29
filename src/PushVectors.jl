@@ -50,6 +50,8 @@ function Base.push!(v::PushVector, x)
     v
 end
 
+Base.empty!(v::PushVector) = (v.len = 0; v)
+
 """
     finish!(v)
 
