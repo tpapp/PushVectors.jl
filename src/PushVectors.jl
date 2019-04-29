@@ -20,13 +20,13 @@ function PushVector{T}(sizehint::Integer = 4) where {T}
     PushVector(Vector{T}(undef, sizehint), 0)
 end
 
-Base.length(v::PushVector) = v.len
+@inline Base.length(v::PushVector) = v.len
 
-Base.size(v::PushVector) = (v.len, )
+@inline Base.size(v::PushVector) = (v.len, )
 
 function Base.sizehint!(v::PushVector, n)
     if length(v.parent) < n || n ≥ v.len
-        resize(v.parent, n)
+        resize!(v.parent, n)
     end
     nothing
 end

@@ -7,7 +7,8 @@ using PushVectors, Test, BenchmarkTools
     @test v == Int[]
     push!(v, 1)
     @test @inferred(v[1]) == 1
-    @test v.len == 1
+    @test v.len == 1 == length(v)
+    @test size(v) == (1, )
     @test v == Int[1]
 
     # make it double
@@ -15,11 +16,26 @@ using PushVectors, Test, BenchmarkTools
         push!(v, i)
     end
     @test v == 1:5
-    @test v.len == 5
+    @test v.len == 5 == length(v)
+    @test size(v) == (5, )
     @test length(v.parent) > 4
     @test @inferred setindex!(v, 9, 3) == 9
+    w = [1, 2, 9, 4, 5]
 
-    @test @inferred(finish!(v)) == [1, 2, 9, 4, 5]
+    # sizehint!
+    sizehint!(v, 20)            # up
+    @test length(v.parent) == 20
+    @test v == w
+
+    sizehint!(v, 10)            # down
+    @test v == w
+    @test length(v.parent) == 10
+
+    sizehint!(v, 3)             # ignored
+    @test v == w
+    @test length(v.parent) == 10
+
+    @test @inferred(finish!(v)) == w
 end
 
 function pushit(v)
