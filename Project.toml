@@ -1,6 +1,7 @@
 name = "PushVectors"
 uuid = "36b54c61-190e-5a5f-82d5-6f0a962d7362"
 authors = ["Tamas K. Papp <tkpapp@gmail.com>"]
+version = 0.1.0
 
 [deps]
 
