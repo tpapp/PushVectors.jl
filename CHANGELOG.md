@@ -1,4 +1,4 @@
-# Unreleased
+# 0.2.0
 
 - add method for empty!
 - add method for append!
